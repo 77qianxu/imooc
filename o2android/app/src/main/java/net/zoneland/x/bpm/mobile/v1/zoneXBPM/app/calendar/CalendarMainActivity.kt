@@ -80,7 +80,8 @@ class CalendarMainActivity : BaseO2Activity() {
                 checkBox.setOnClickListener {
                     toggleCheck(checkBox.isChecked, child.id)
                 }
-                if (child.manageable) {
+                //@date 2018-8-8 暂时不修改组织日历
+                if (child.manageable && child.type == "PERSON") {
                     editBtn.visible()
                     editBtn.setOnClickListener {
                         XLog.info("点击编辑日历。。。。。。${child.name}.........")
@@ -209,16 +210,9 @@ class CalendarMainActivity : BaseO2Activity() {
      * 修改日程事件
      */
     fun editEvent(event: CalendarEventInfoData) {
-        if (groups.isNotEmpty()) {
-            val arr = ArrayList<CalendarInfoPickViewData>()
-            if (groups.size > 1) {
-                groups[0].children.forEach { arr.add(it) }
-                groups[1].children.forEach { arr.add(it) }
-            }else {
-                groups[0].children.forEach { arr.add(it) }
-            }
-            go<CreateEventActivity>(CreateEventActivity.startEdit(event, arr))
-        }
+        val arr = ArrayList<CalendarInfoPickViewData>()
+        groups[0].children.forEach { arr.add(it) }
+        go<CreateEventActivity>(CreateEventActivity.startEdit(event, arr))
     }
 
     /**
@@ -234,14 +228,9 @@ class CalendarMainActivity : BaseO2Activity() {
      * 创建日程事件
      */
     private fun createCalendarEvent() {
-        if (groups.isNotEmpty()) {
+        if (groups.isNotEmpty() && groups[0].children.isNotEmpty()) {
             val arr = ArrayList<CalendarInfoPickViewData>()
-            if (groups.size > 1) {
-                groups[0].children.forEach { arr.add(it) }
-                groups[1].children.forEach { arr.add(it) }
-            }else {
-                groups[0].children.forEach { arr.add(it) }
-            }
+            groups[0].children.forEach { arr.add(it) }
             go<CreateEventActivity>(CreateEventActivity.startCreate(arr))
         } else {
             XToast.toastShort(this, "日历数据为空！！！！")

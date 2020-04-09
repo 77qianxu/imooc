@@ -81,7 +81,7 @@ class JSInterfaceO2mBiz  private constructor(val activity: FragmentActivity?) {
                 val maxNumber = jsFormData.maxNumber ?: 0
                 val pickedIdentities = jsFormData.pickedIdentities ?: ArrayList()
                 ContactPickerActivity.startPickerBundle(
-                        arrayListOf(ContactPickerActivity.identityPicker),
+                        arrayListOf("identityPicker"),
                         dutyList = dutyList,
                         multiple = multiple,
                         topUnitList = topList,
@@ -90,7 +90,7 @@ class JSInterfaceO2mBiz  private constructor(val activity: FragmentActivity?) {
                         initIdList = pickedIdentities
                 )
             }else {
-                ContactPickerActivity.startPickerBundle(arrayListOf(ContactPickerActivity.identityPicker))
+                ContactPickerActivity.startPickerBundle(arrayListOf("identityPicker"))
             }
             showPicker(bundle, callback)
         } else {
@@ -111,7 +111,7 @@ class JSInterfaceO2mBiz  private constructor(val activity: FragmentActivity?) {
                 val maxNumber = jsFormData.maxNumber ?: 0
                 val pickedDepartments = jsFormData.pickedDepartments ?: ArrayList()
                 ContactPickerActivity.startPickerBundle(
-                        arrayListOf(ContactPickerActivity.departmentPicker),
+                        arrayListOf("departmentPicker"),
                         dutyList = arrayListOf(),
                         multiple = multiple,
                         topUnitList = topList,
@@ -120,7 +120,7 @@ class JSInterfaceO2mBiz  private constructor(val activity: FragmentActivity?) {
                         initDeptList = pickedDepartments
                 )
             }else {
-                ContactPickerActivity.startPickerBundle(arrayListOf(ContactPickerActivity.departmentPicker))
+                ContactPickerActivity.startPickerBundle(arrayListOf("departmentPicker"))
             }
             showPicker(bundle, callback)
         } else {
@@ -139,7 +139,7 @@ class JSInterfaceO2mBiz  private constructor(val activity: FragmentActivity?) {
                 val maxNumber = jsFormData.maxNumber ?: 0
                 val pickedPersonList = jsFormData.pickedUsers ?: ArrayList()
                 ContactPickerActivity.startPickerBundle(
-                        arrayListOf(ContactPickerActivity.personPicker),
+                        arrayListOf("personPicker"),
                         dutyList = arrayListOf(),
                         multiple = multiple,
                         topUnitList = arrayListOf(),
@@ -148,7 +148,7 @@ class JSInterfaceO2mBiz  private constructor(val activity: FragmentActivity?) {
                         initUserList = pickedPersonList
                 )
             }else {
-                ContactPickerActivity.startPickerBundle(arrayListOf(ContactPickerActivity.personPicker))
+                ContactPickerActivity.startPickerBundle(arrayListOf("personPicker"))
             }
            showPicker(bundle, callback)
         } else {
@@ -167,7 +167,7 @@ class JSInterfaceO2mBiz  private constructor(val activity: FragmentActivity?) {
                 val maxNumber = jsFormData.maxNumber ?: 0
                 val pickedGroups = jsFormData.pickedGroups ?: ArrayList()
                 ContactPickerActivity.startPickerBundle(
-                        arrayListOf(ContactPickerActivity.groupPicker),
+                        arrayListOf("groupPicker"),
                         dutyList = arrayListOf(),
                         multiple = multiple,
                         topUnitList = arrayListOf(),
@@ -176,7 +176,7 @@ class JSInterfaceO2mBiz  private constructor(val activity: FragmentActivity?) {
                         initGroupList = pickedGroups
                 )
             }else {
-                ContactPickerActivity.startPickerBundle(arrayListOf(ContactPickerActivity.groupPicker))
+                ContactPickerActivity.startPickerBundle(arrayListOf("groupPicker"))
             }
             showPicker( bundle, callback)
         } else {
