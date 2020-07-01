@@ -19,6 +19,9 @@ MWF.xApplication.Selector.Unit = new Class({
     loadSelectItems: function(addToNext){
         if (this.options.units.length){
             this.options.units.each(function(unit){
+
+                var container = new Element("div").inject( this.itemAreaNode );
+
                 // this.action.listUnitByKey(function(json){
                 //     if (json.data.length){
                 //         json.data.each(function(data){
@@ -41,11 +44,11 @@ MWF.xApplication.Selector.Unit = new Class({
                             json.data.each( function(data){
                                 if( this.options.expandSubEnable ){
                                     if (data.subDirectUnitCount){
-                                        var category = this._newItemCategory("ItemCategory", data, this, this.itemAreaNode);
+                                        var category = this._newItemCategory("ItemCategory", data, this, container );
                                         this.subCategorys.push(category);
                                     }
                                 }else{
-                                    var item = this._newItem( data, this, this.itemAreaNode);
+                                    var item = this._newItem( data, this, container );
                                     this.subItems.push(item);
                                 }
                             }.bind(this));
@@ -60,11 +63,11 @@ MWF.xApplication.Selector.Unit = new Class({
                             json.data.each( function(data){
                                 if( this.options.expandSubEnable ) {
                                     if (data.subDirectUnitCount){
-                                        var category = this._newItemCategory("ItemCategory", data, this, this.itemAreaNode);
+                                        var category = this._newItemCategory("ItemCategory", data, this, container );
                                         this.subCategorys.push(category);
                                     }
                                 }else{
-                                    var item = this._newItem(data, this, this.itemAreaNode);
+                                    var item = this._newItem(data, this, container );
                                     this.subItems.push(item);
                                 }
                             }.bind(this));
