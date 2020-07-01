@@ -228,6 +228,22 @@ MWF.xApplication.Template.Selector.Custom.Item = new Class({
             this.selectedItem = selectedItem[0];
             this.setSelected();
         }
+    },
+    destroy: function(){
+        if( this.isSelected )this.unSelected();
+        this.selector.items.erase( this );;
+
+        if( this.category ){
+            if( this.category.subCategorys && this.category.subCategorys.length ){
+                this.category.subCategorys.erase( this );
+            }
+            if( this.category.subItems && this.category.subItems.length ){
+                this.category.subItems.erase( this );
+            }
+        }
+
+        if(this.node)this.node.destroy();
+        delete this;
     }
 });
 MWF.xApplication.Template.Selector.Custom.ItemSelected = new Class({
@@ -276,7 +292,6 @@ MWF.xApplication.Template.Selector.Custom.ItemCategory = new Class({
         return this.data.name;
     },
     clickItem: function (callback) {
-        debugger;
         if (this._hasChild()) {
             var firstLoaded = !this.loaded;
             this.loadSub(function () {
@@ -302,8 +317,36 @@ MWF.xApplication.Template.Selector.Custom.ItemCategory = new Class({
             }.bind(this));
         }
     },
+    destroy : function(){
+        for( var item in this.subItems ){
+            item.destroy();
+        }
+
+        for( var category in this.subCategorys ){
+            category.destroy();
+        }
+        if( this.category && this.category.subCategorys && this.category.subCategorys.length ){
+            this.category.subCategorys.erase( this );
+        }
+
+        if(this.node)this.node.destroy();
+        delete this;
+    },
+    reloadSub : function(callback){
+        for( var item in this.subItems ){
+            item.destroy();
+        }
+        this.subItems = [];
+
+        for( var category in this.subCategorys ){
+            category.destroy();
+        }
+        this.subCategorys = [];
+
+        this.loaded = false;
+        this.loadSub( callback )
+    },
     loadSub: function (callback) {
-        debugger;
         if (!this.loaded) {
             if( this._hasChildItem() ){
                 this.data.subItemList.each(function (subItem, index) {
@@ -354,6 +397,41 @@ MWF.xApplication.Template.Selector.Custom.ItemCategorySelectable = new Class({
     },
     _getTtiteText: function () {
         return this.data.name;
+    },
+    destroy : function(){
+        for( var item in this.subItems ){
+            item.destroy();
+        }
+
+        for( var category in this.subCategorys ){
+            category.destroy();
+        }
+
+        if( this.category ){
+            if( this.category.subCategorys && this.category.subCategorys.length ){
+                this.category.subCategorys.erase( this );
+            }
+            if( this.category.subItems && this.category.subItems.length ){
+                this.category.subItems.erase( this );
+            }
+        }
+
+        if(this.node)this.node.destroy();
+        delete this;
+    },
+    reloadSub : function(callback){
+        for( var item in this.subItems ){
+            item.destroy();
+        }
+        this.subItems = [];
+
+        for( var category in this.subCategorys ){
+            category.destroy();
+        }
+        this.subCategorys = [];
+
+        this.loaded = false;
+        this.loadSubItems( callback );
     },
     loadSubItems: function( callback ){
         if (!this.loaded){

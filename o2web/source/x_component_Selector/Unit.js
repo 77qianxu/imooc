@@ -392,6 +392,26 @@ MWF.xApplication.Selector.Unit.Item = new Class({
         }
     },
     checkSelectAll : function(){
+        if( this.isSelectedAll )return;
+        if( !this.selectAllNode )return;
+        if( !this.subItems )return;
+        var isAllItemSelected = true;
+        for( var i=0; i< this.subItems.length; i++ ){
+            if( !this.subItems[i].isSelected ){
+                isAllItemSelected = false;
+                break;
+            }
+        }
+        if( isAllItemSelected ){
+            if( this.selector.isFlatCategory ){
+                this.selectAllNode.setStyles( this.selector.css.flatCategory_selectAll_selected );
+            }else if( this.selector.css.selectorItemCategoryActionNode_selectAll_selected ){
+                this.selectAllNode.setStyles( this.selector.css.selectorItemCategoryActionNode_selectAll_selected );
+            }
+            this.isSelectedAll = true;
+        }
+    },
+    checkUnselectAll : function(){
         if( !this.isSelectedAll )return;
         if( !this.selectAllNode )return;
         if( ! this.subItems )return;
