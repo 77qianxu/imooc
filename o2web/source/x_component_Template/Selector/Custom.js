@@ -231,7 +231,7 @@ MWF.xApplication.Template.Selector.Custom.Item = new Class({
     },
     destroy: function(){
         if( this.isSelected )this.unSelected();
-        this.selector.items.erase( this );;
+        this.selector.items.erase( this );
 
         if( this.category ){
             if( this.category.subCategorys && this.category.subCategorys.length ){
@@ -318,13 +318,10 @@ MWF.xApplication.Template.Selector.Custom.ItemCategory = new Class({
         }
     },
     destroy : function(){
-        for( var item in this.subItems ){
-            item.destroy();
-        }
+        while( this.subItems.length )this.subItems[0].destroy();
 
-        for( var category in this.subCategorys ){
-            category.destroy();
-        }
+        while( this.subCategorys.length )this.subCategorys[0].destroy();
+
         if( this.category && this.category.subCategorys && this.category.subCategorys.length ){
             this.category.subCategorys.erase( this );
         }
@@ -333,14 +330,10 @@ MWF.xApplication.Template.Selector.Custom.ItemCategory = new Class({
         delete this;
     },
     reloadSub : function(callback){
-        for( var item in this.subItems ){
-            item.destroy();
-        }
+        while( this.subItems.length )this.subItems[0].destroy();
         this.subItems = [];
 
-        for( var category in this.subCategorys ){
-            category.destroy();
-        }
+        while( this.subCategorys.length )this.subCategorys[0].destroy();
         this.subCategorys = [];
 
         this.loaded = false;
@@ -399,13 +392,12 @@ MWF.xApplication.Template.Selector.Custom.ItemCategorySelectable = new Class({
         return this.data.name;
     },
     destroy : function(){
-        for( var item in this.subItems ){
-            item.destroy();
-        }
+        if( this.isSelected )this.unSelected();
+        this.selector.items.erase( this );
 
-        for( var category in this.subCategorys ){
-            category.destroy();
-        }
+        while( this.subItems.length )this.subItems[0].destroy();
+
+        while( this.subCategorys.length )this.subCategorys[0].destroy();
 
         if( this.category ){
             if( this.category.subCategorys && this.category.subCategorys.length ){
@@ -420,14 +412,10 @@ MWF.xApplication.Template.Selector.Custom.ItemCategorySelectable = new Class({
         delete this;
     },
     reloadSub : function(callback){
-        for( var item in this.subItems ){
-            item.destroy();
-        }
+        while( this.subItems.length )this.subItems[0].destroy();
         this.subItems = [];
 
-        for( var category in this.subCategorys ){
-            category.destroy();
-        }
+        while( this.subCategorys.length )this.subCategorys[0].destroy();
         this.subCategorys = [];
 
         this.loaded = false;
