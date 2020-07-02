@@ -5,7 +5,6 @@ import com.x.base.core.container.EntityManagerContainer;
 import com.x.base.core.container.factory.EntityManagerContainerFactory;
 import com.x.base.core.entity.JpaObject;
 import com.x.base.core.project.annotation.FieldDescribe;
-import com.x.base.core.project.annotation.FieldTypeDescribe;
 import com.x.base.core.project.bean.WrapCopier;
 import com.x.base.core.project.bean.WrapCopierFactory;
 import com.x.base.core.project.gson.GsonPropertyObject;
@@ -103,7 +102,11 @@ class ActionManageListFilterPaging extends BaseAction {
 		}
 
 		if (ListTools.isNotEmpty(wi.getProcessList())) {
-			p = cb.and(p, root.get(Work_.process).in(wi.getProcessList()));
+			if(BooleanUtils.isFalse(wi.getRelateEditionProcess())) {
+				p = cb.and(p, root.get(Work_.process).in(wi.getProcessList()));
+			}else{
+				p = cb.and(p, root.get(Work_.process).in(business.process().listEditionProcess(wi.getProcessList())));
+			}
 		}
 		if (ListTools.isNotEmpty(wi.getWorkList())) {
 			p = cb.and(p, root.get(Work_.id).in(wi.getWorkList()));
@@ -187,7 +190,11 @@ class ActionManageListFilterPaging extends BaseAction {
 		}
 
 		if (ListTools.isNotEmpty(wi.getProcessList())) {
-			p = cb.and(p, root.get(Work_.process).in(wi.getProcessList()));
+			if(BooleanUtils.isFalse(wi.getRelateEditionProcess())) {
+				p = cb.and(p, root.get(Work_.process).in(wi.getProcessList()));
+			}else{
+				p = cb.and(p, root.get(Work_.process).in(business.process().listEditionProcess(wi.getProcessList())));
+			}
 		}
 		if (ListTools.isNotEmpty(wi.getWorkList())) {
 			p = cb.and(p, root.get(Work_.id).in(wi.getWorkList()));
@@ -229,6 +236,9 @@ class ActionManageListFilterPaging extends BaseAction {
 		@FieldDescribe("流程")
 		private List<String> processList;
 
+		@FieldDescribe("是否查找同版本流程数据：true(默认查找)|false")
+		private Boolean relateEditionProcess = true;
+
 		@FieldDescribe("开始时间yyyy-MM-dd HH:mm:ss")
 		private String startTime;
 
@@ -253,9 +263,8 @@ class ActionManageListFilterPaging extends BaseAction {
 		@FieldDescribe("job工作实例")
 		private List<String> jobList;
 
-		@FieldDescribe("工作状态")
-		@FieldTypeDescribe(fieldType="enum",fieldValue="start|processing|hanging",fieldTypeName = "com.x.processplatform.core.entity.content.WorkStatus")
-		private List<WorkStatus> workStatusList;
+		@FieldDescribe("工作状态：start|processing|hanging")
+		private List<String> workStatusList;
 
 		@FieldDescribe("关键字")
 		private String key;
@@ -329,6 +338,14 @@ class ActionManageListFilterPaging extends BaseAction {
 			this.processList = processList;
 		}
 
+		public Boolean getRelateEditionProcess() {
+			return relateEditionProcess;
+		}
+
+		public void setRelateEditionProcess(Boolean relateEditionProcess) {
+			this.relateEditionProcess = relateEditionProcess;
+		}
+
 		public List<String> getStartTimeMonthList() {
 			return startTimeMonthList;
 		}
@@ -345,11 +362,11 @@ class ActionManageListFilterPaging extends BaseAction {
 			this.activityNameList = activityNameList;
 		}
 
-		public List<WorkStatus> getWorkStatusList() {
+		public List<String> getWorkStatusList() {
 			return workStatusList;
 		}
 
-		public void setWorkStatusList(List<WorkStatus> workStatusList) {
+		public void setWorkStatusList(List<String> workStatusList) {
 			this.workStatusList = workStatusList;
 		}
 

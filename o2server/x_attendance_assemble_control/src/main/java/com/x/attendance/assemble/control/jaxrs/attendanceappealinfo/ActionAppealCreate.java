@@ -95,7 +95,9 @@ public class ActionAppealCreate extends BaseAction {
 				try {
 					appealAuditPersonName = attendanceAppealInfoServiceAdv.getAppealAuditPerson( personName, attendanceAppealInfo.getUnitName(), wrapIn.getIdentity() );
 					if( StringUtils.isNotEmpty( appealAuditPersonName )){
-						appealAuditPersonName = userManagerService.getPersonNameByIdentity(appealAuditPersonName);
+						if(StringUtils.indexOf(appealAuditPersonName, "@I")>0){
+							appealAuditPersonName = userManagerService.getPersonNameByIdentity(appealAuditPersonName);
+						}
 						attendanceAppealAuditInfo.setProcessPerson1( appealAuditPersonName );
 						attendanceAppealAuditInfo.setCurrentProcessor( appealAuditPersonName );
 						attendanceAppealInfo.setCurrentProcessor( appealAuditPersonName );// 将第一个处理人设置为当前处理人
@@ -142,7 +144,7 @@ public class ActionAppealCreate extends BaseAction {
 		
 		//查询申诉复核人
 		if (check) {
-			if( StringUtils.isNotEmpty( appeal_checker_type ) && !"无".equals( appeal_auditor_type  ) ) {
+			if( StringUtils.isNotEmpty( appeal_checker_type ) && !"无".equals( appeal_checker_type  ) ) {
 				try {
 					appealCheckPersonName = attendanceAppealInfoServiceAdv.getAppealCheckPerson( personName, attendanceAppealInfo.getUnitName(), wrapIn.getIdentity() );
 					attendanceAppealAuditInfo.setProcessPerson2( appealCheckPersonName );

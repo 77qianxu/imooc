@@ -213,11 +213,10 @@ public class ProcessFactory extends ElementFactory {
 
 	public List<String> listControlableProcess(EffectivePerson effectivePerson, Application application)
 			throws Exception {
-		Business business = this.business();
 		List<String> ids = this.listWithApplication(application);
 		List<String> list = new ArrayList<>();
 		for (String str : ids) {
-			Process o = business.process().pick(str);
+			Process o = this.pick(str);
 			if (null != o) {
 				if (effectivePerson.isPerson(o.getControllerList())) {
 					list.add(str);
@@ -259,30 +258,6 @@ public class ProcessFactory extends ElementFactory {
 		return null;
 	}
 
-	// /* 判断用户是否有管理权限 */
-	// public boolean allowControl(EffectivePerson effectivePerson, Process process)
-	// throws Exception {
-	// if (effectivePerson.isManager()) {
-	// return true;
-	// }
-	// if (null != process) {
-	// if (effectivePerson.isUser(process.getControllerList())) {
-	// return true;
-	// }
-	// Application application =
-	// this.business().application().pick(process.getApplication());
-	// if (null != application) {
-	// if (effectivePerson.isUser(application.getControllerList())) {
-	// return true;
-	// }
-	// if (effectivePerson.isUser(application.getCreatorPerson())) {
-	// return true;
-	// }
-	// }
-	// }
-	// return false;
-	// }
-
 	public <T extends Process> List<T> sort(List<T> list) {
 		list = list.stream()
 				.sorted(Comparator.comparing(Process::getAlias, Comparator.nullsLast(String::compareTo))
@@ -312,6 +287,29 @@ public class ProcessFactory extends ElementFactory {
 		}
 
 		cq.select(root).where(p);
+		return em.createQuery(cq).getResultList();
+	}
+
+	/* 根据processList获取同版本的所有流程 */
+	public List<String> listEditionProcess(List<String> processList) throws Exception {
+		EntityManager em = this.entityManagerContainer().get(Process.class);
+		CriteriaBuilder cb = em.getCriteriaBuilder();
+		CriteriaQuery<String> cq = cb.createQuery(String.class);
+		Root<Process> root = cq.from(Process.class);
+		Predicate p = cb.conjunction();
+		p = cb.and(p, root.get(Process_.id).in(processList));
+
+		p = cb.and(p, cb.isNull(root.get(Process_.editionEnable)));
+		Subquery<Process> subquery = cq.subquery(Process.class);
+		Root<Process> subRoot = subquery.from(Process.class);
+		Predicate subP = cb.conjunction();
+		subP = cb.and(subP, cb.equal(root.get(Process_.edition), subRoot.get(Process_.edition)));
+		subP = cb.and(subP, subRoot.get(Process_.id).in(processList));
+		subP = cb.and(subP, cb.isNotNull(root.get(Process_.edition)));
+		subquery.select(subRoot).where(subP);
+		p = cb.or(p, cb.exists(subquery));
+
+		cq.select(root.get(Process_.id)).where(p);
 		return em.createQuery(cq).getResultList();
 	}
 }
